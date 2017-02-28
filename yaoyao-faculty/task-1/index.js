@@ -29,9 +29,10 @@ const MAX_STR_LEN = 16;
             }
         }
 
-        validateBtn.addEventListener('click', () => {
+        validateBtn.addEventListener('click', (e) => {
             const name = inputElem.value.trim();
             const len = getStrLen(name);
+            console.log('name len: ' + getStrLen(name));        
 
             if (len === 0) 
                 notice(false, '姓名不能为空');
@@ -41,8 +42,9 @@ const MAX_STR_LEN = 16;
                 notice(false, '不能少于4个字符');
             else 
                 notice(true, '格式正确');
-
-            console.log('name len: ' + getStrLen(name));        
+            
+            // disable form default behavior
+            e.preventDefault();
         });
     }
 
