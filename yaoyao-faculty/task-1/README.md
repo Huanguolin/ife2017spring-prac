@@ -1,5 +1,4 @@
-#task-1
-
+#task-1(我的实现[demo](https://huanguolin.github.io/ife2017spring-prac/yaoyao-faculty/task-1/index.html))
 ###任务[描述](http://ife.baidu.com/course/detail/id/97)    
 在页面中实现一个输入框与按钮，要求点击验证按钮后，对输入框中内容进行格式校验，并在其下方显示校验结果
 ![示例图片](http://7xrp04.com1.z0.glb.clouddn.com/task_2_29_1.jpg)   
