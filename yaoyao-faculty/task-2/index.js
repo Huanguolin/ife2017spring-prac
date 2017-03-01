@@ -29,20 +29,31 @@ const MAX_STR_LEN = 16;
             }
         }
 
-        validateBtn.addEventListener('click', (e) => {
-            const name = inputElem.value.trim();
-            const len = getStrLen(name);
-            console.log('name len: ' + getStrLen(name));        
+        var rules = [
+            { 
+                validator: function (value) {
+                    const name = value.trim();
+                    const len = getStrLen(name);
+                    console.log('name len: ' + getStrLen(name));        
 
-            if (len === 0) 
-                notice(false, '姓名不能为空');
-            else if (len > MAX_STR_LEN )
-                notice(false, '不能多于16个字符');        
-            else if (len < MIN_STR_LEN) 
-                notice(false, '不能少于4个字符');
-            else 
-                notice(true, '格式正确');
-            
+                    if (len === 0) 
+                        notice(false, '姓名不能为空');
+                    else if (len > MAX_STR_LEN )
+                        notice(false, '不能多于16个字符');        
+                    else if (len < MIN_STR_LEN) 
+                        notice(false, '不能少于4个字符');
+                    else 
+                        notice(true, '格式正确');
+                },
+                trigger: 'manual' 
+            }
+        ];
+        var validator = new Validator(inputElem, rules);
+
+        validateBtn.addEventListener('click', (e) => {
+            const res = validator.isValid();
+            console.log('isValid: ' + res); 
+                       
             // disable form default behavior
             e.preventDefault();
         });
