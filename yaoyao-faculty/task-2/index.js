@@ -14,59 +14,98 @@
         const inputElems = document.getElementsByTagName('input');
         const noticeElems = document.getElementsByTagName('span');
 
-        var rules = [
+        var rules1 = [
+            {
+                validator: function (value) {
+                    const len = getStrLen(value.trim());                     
+                    if (len === 0)
+                        notice(inputElems[0], noticeElems[0], '必填，需要4-16字符');  
+                    
+                    return true;
+                },
+                trigger: 'focus' 
+            },
             { 
                 validator: function (value) {
-                    const name = value.trim();
-                    const len = getStrLen(name);       
+                    const len = getStrLen(value.trim());       
 
-                    if (len > MAX_STR_LEN )
-                        notice(false, '不能多于16个字符');        
+                    if (len === 0)
+                        notice(inputElems[0], noticeElems[0], '该项不能为空', false);  
+                    else if (len > MAX_STR_LEN )
+                        notice(inputElems[0], noticeElems[0], '不能多于16个字符', false);        
                     else if (len < MIN_STR_LEN) 
-                        notice(false, '不能少于4个字符');
-                    else 
-                        notice(true, '格式正确');
+                        notice(inputElems[0], noticeElems[0], '不能少于4个字符', false);
+                    else {
+                        notice(inputElems[0], noticeElems[0], '格式正确', true);
+                        return true;
+                    }
+
+                    return false;
                 },
-                trigger: 'manual' 
+                trigger: 'blur' 
             }
         ];
-        var validator = new Validator(inputElems[0], rules);
+        var rules2 = [
+            {
+                validator: function (value) {
+                    const len = getStrLen(value.trim());                     
+                    if (len === 0)
+                        notice(inputElems[1], noticeElems[1], '必填，需要4-12字符');  
+                    
+                    return true;
+                },
+                trigger: 'focus' 
+            },
+            { 
+                validator: function (value) {
+                    const len = value.length;       
+
+                    if (len === 0)
+                        notice(inputElems[1], noticeElems[1], '该项不能为空', false);  
+                    else if (len > 12 )
+                        notice(inputElems[1], noticeElems[1], '不能多于12个字符', false);        
+                    else if (len < 4) 
+                        notice(inputElems[1], noticeElems[1], '不能少于4个字符', false);
+                    else {
+                        notice(inputElems[1], noticeElems[1], '格式正确', true);
+                        return true;
+                    }
+
+                    return false;
+                },
+                trigger: 'blur' 
+            }
+        ];
+        var validator1 = new Validator(inputElems[0], rules1);
+        //var validator2 = new Validator(inputElems[1], rules2);
 
         validateBtn.addEventListener('click', (e) => {
-            const res = validator.isValid();                       
+            const res = validator1.isValid();                       
+            res = res && validator2.isValid();  
+
             // disable form default behavior
             e.preventDefault();
         });
     }
 
-    function requiredValidate (input, output) {
-        if (input.length === 0) {
-            notice(output, false, '该项不能为空');
-            return false;
-        } 
-        return true;
-    }
+    function notice (input, span, msg, isSuccess = undefined) {
+        if (span.childNodes[0]) {
+            span.childNodes[0].nodeValue = msg;
+        } else {
+            span.appendChild(document.createTextNode(msg));
+        }
 
-    function promptValidate (input, output, isOptional, msg) {
-        if (input.length === 0) {
-            notice(output, '该项不能为空', false);
-            return false;
-        } 
-        return true;
-    }
-
-    function notice (element, msg, isSuccess = undefined) {
-        element.childNodes[0].nodeValue = msg;
-        if (isSuccess === undefined) {
-            // remove all style
-
+        if (isSuccess === undefined) {        
+            span.style.color = '#aaa';
             return;
         };
 
         if (isSuccess) {
-            element.style.color = 'green';
+            span.style.color = 'green';
+            input.style.borderColor = 'green';
         } else {
-            element.style.color = 'red';          
+            span.style.color = 'red'; 
+            input.style.borderColor = 'red';         
         }
     }
 
