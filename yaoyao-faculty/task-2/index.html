@@ -6,11 +6,45 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <form class="single-validate">
-        <label for="name">姓名</label>
-        <input type="text" id="name">
-        <button id="validate-btn">验证</button>
-        <span id="notice">必填，长度为4~16个字符</span>
+    <form class="clearfix">
+        <ul>
+            <li class="form-item">
+                <label>
+                    姓名
+                    <input type="text">
+                </label>
+                <span></span>
+            </li>
+            <li class="form-item">
+                <label>
+                    密码
+                    <input type="text">
+                </label>
+                <span></span>
+            </li>
+            <li class="form-item">
+                <label>
+                    密码确认
+                    <input type="text">
+                </label>
+                <span></span>
+            </li>
+            <li class="form-item">
+                <label>
+                    邮箱
+                    <input type="text">
+                </label>
+                <span></span>
+            </li>
+            <li class="form-item">
+                <label>
+                    手机
+                    <input type="text">
+                </label>
+                <span></span>
+            </li>
+        </ul>
+        <button>提交</button>
     </form>
 
     <script src="validator.js"></script>

@@ -1,44 +1,26 @@
 
 'use strict';
 
-// const value define
-const MIN_STR_LEN = 4;
-const MAX_STR_LEN = 16;
+(function () {    
+    // const value define
+    const MIN_STR_LEN = 4;
+    const MAX_STR_LEN = 16;
 
-
-(function () {
+    // init 
     window.addEventListener('load', () => init());
         
     function init () {
-        const validateBtn = document.getElementById('validate-btn');
-        const inputElem = document.getElementById('name');
-        const noticeElem = document.getElementById('notice');  
-
-        const notice = (isSuccess, msg) => {
-            noticeElem.childNodes[0].nodeValue = msg;
-            if (isSuccess) {
-                inputElem.classList.remove('input-warn');
-                inputElem.classList.add('input-success');
-                noticeElem.classList.remove('text-warn');
-                noticeElem.classList.add('text-success');
-            } else {
-                inputElem.classList.remove('input-success');
-                inputElem.classList.add('input-warn');
-                noticeElem.classList.remove('text-success');
-                noticeElem.classList.add('text-warn');            
-            }
-        }
+        const validateBtn = document.getElementsByTagName('button')[0];
+        const inputElems = document.getElementsByTagName('input');
+        const noticeElems = document.getElementsByTagName('span');
 
         var rules = [
             { 
                 validator: function (value) {
                     const name = value.trim();
-                    const len = getStrLen(name);
-                    console.log('name len: ' + getStrLen(name));        
+                    const len = getStrLen(name);       
 
-                    if (len === 0) 
-                        notice(false, '姓名不能为空');
-                    else if (len > MAX_STR_LEN )
+                    if (len > MAX_STR_LEN )
                         notice(false, '不能多于16个字符');        
                     else if (len < MIN_STR_LEN) 
                         notice(false, '不能少于4个字符');
@@ -48,15 +30,44 @@ const MAX_STR_LEN = 16;
                 trigger: 'manual' 
             }
         ];
-        var validator = new Validator(inputElem, rules);
+        var validator = new Validator(inputElems[0], rules);
 
         validateBtn.addEventListener('click', (e) => {
-            const res = validator.isValid();
-            console.log('isValid: ' + res); 
-                       
+            const res = validator.isValid();                       
             // disable form default behavior
             e.preventDefault();
         });
+    }
+
+    function requiredValidate (input, output) {
+        if (input.length === 0) {
+            notice(output, false, '该项不能为空');
+            return false;
+        } 
+        return true;
+    }
+
+    function promptValidate (input, output, isOptional, msg) {
+        if (input.length === 0) {
+            notice(output, '该项不能为空', false);
+            return false;
+        } 
+        return true;
+    }
+
+    function notice (element, msg, isSuccess = undefined) {
+        element.childNodes[0].nodeValue = msg;
+        if (isSuccess === undefined) {
+            // remove all style
+
+            return;
+        };
+
+        if (isSuccess) {
+            element.style.color = 'green';
+        } else {
+            element.style.color = 'red';          
+        }
     }
 
     function getStrLen (str) {   
