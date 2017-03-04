@@ -5,14 +5,25 @@
     // const value define
     const MIN_STR_LEN = 4;
     const MAX_STR_LEN = 16;
+    const NOTICE_INFO = [
+        '必填，长度为4-16个字符',
+        '必填，长度为6-12个字符',
+        '必填，必须与前一项输入一致',
+        '选填，需要附合邮箱的格式，如：example@test.com',
+        '选填，需要附合手机号码格式，如：188xxxx1234'
+    ];
 
     // init 
     window.addEventListener('load', () => init());
+
+    var validateBtn;
+    var inputElems;
+    var spanElems;
         
     function init () {
-        const validateBtn = document.getElementsByTagName('button')[0];
-        const inputElems = document.getElementsByTagName('input');
-        const noticeElems = document.getElementsByTagName('span');
+        validateBtn = document.getElementsByTagName('button')[0];
+        inputElems = document.getElementsByTagName('input');
+        spanElems = document.getElementsByTagName('span');
 
         var rules1 = [
             {
@@ -76,36 +87,22 @@
                 trigger: 'blur' 
             }
         ];
-        var validator1 = new Validator(inputElems[0], rules1);
-        //var validator2 = new Validator(inputElems[1], rules2);
+
+        Array.prototype.forEach.call(inputElems, (e, i) => {
+            e.addEventListener('focus', i => focusNotice(i));
+        });
 
         validateBtn.addEventListener('click', (e) => {
-            const res = validator1.isValid();                       
-            res = res && validator2.isValid();  
-
-            // disable form default behavior
             e.preventDefault();
         });
     }
 
-    function notice (input, span, msg, isSuccess = undefined) {
-        if (span.childNodes[0]) {
-            span.childNodes[0].nodeValue = msg;
+    function focusNotice (index) {
+        if (spanElems[index].childNodes) {
+            spanElems[index].childNodes[0].nodeValue = NOTICE_INFO[index];
+            spanElems[index].style.color = '#aaa';
         } else {
-            span.appendChild(document.createTextNode(msg));
-        }
-
-        if (isSuccess === undefined) {        
-            span.style.color = '#aaa';
-            return;
-        };
-
-        if (isSuccess) {
-            span.style.color = 'green';
-            input.style.borderColor = 'green';
-        } else {
-            span.style.color = 'red'; 
-            input.style.borderColor = 'red';         
+            spanElems[index].appendChild(document.createTextNode(msg));
         }
     }
 
