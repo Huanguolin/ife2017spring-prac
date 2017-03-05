@@ -37,9 +37,9 @@
         };
         const handleBlurEvent = i => {
             if (BLUR_DO_ACTION[i] === validatePasswd2)
-                validatePasswd2(inputElems[i-1], inputElems[i], spanElems[i]);
+                return validatePasswd2(inputElems[i-1], inputElems[i], spanElems[i]);
             else 
-                BLUR_DO_ACTION[i](inputElems[i], spanElems[i]);
+                return BLUR_DO_ACTION[i](inputElems[i], spanElems[i]);
         };
 
         Array.prototype.forEach.call(inputElems, (e, i) => {
@@ -48,7 +48,16 @@
         });
 
         validateBtn.addEventListener('click', (e) => {
-            BLUR_DO_ACTION.forEach((v, i) => handleBlurEvent(i));
+            var res = true;
+            BLUR_DO_ACTION.forEach((v, i) => {
+                const r = handleBlurEvent(i);
+                res = res && r;
+            });
+
+            if (res)
+                alert('提交成功！');
+            else 
+                alert('提交失败！');
 
             e.preventDefault();
         });
@@ -59,59 +68,80 @@
         const MAX_LEN = 16;
         const MIN_LEN = 4;
 
+        var res = false;
         const len = getNameLen(inputElem.value.trim());       
-        const res = validateLen(len, MAX_LEN, MIN_LEN);
-        if (res)
-            showResult(inputElem, outputElem, res, 'fail');  
-        else 
+        const msg = validateLen(len, MAX_LEN, MIN_LEN);
+        if (msg) {
+            showResult(inputElem, outputElem, msg, 'fail');  
+        } else {
             showResult(inputElem, outputElem, '格式正确', 'success');
+            res = true;
+        }
+        return res;
     }
     
     function validatePasswd1 (inputElem, outputElem) {        
         const MAX_LEN = 12;
         const MIN_LEN = 6;
 
+        var res = false;
         const len = inputElem.value.length;      
-        const res = validateLen(len, MAX_LEN, MIN_LEN);       
-
-        if (res)
-            showResult(inputElem, outputElem, res, 'fail');  
-        else 
+        const msg = validateLen(len, MAX_LEN, MIN_LEN);
+        if (msg) {
+            showResult(inputElem, outputElem, msg, 'fail');  
+        } else {
             showResult(inputElem, outputElem, '格式正确', 'success');
+            res = true;
+        }
+        return res;
     }
         
-    function validatePasswd2 (inputElem1, inputElem2, outputElem) {     
-        if (inputElem1.value.length === 0)
+    function validatePasswd2 (inputElem1, inputElem2, outputElem) { 
+        var res = false;
+        if (inputElem1.value.length === 0) {
             showResult(inputElem2, outputElem, '前一项不能为空', 'fail');
-        else if (inputElem1.value === inputElem2.value)
-            showResult(inputElem2, outputElem, '格式正确', 'success');
-        else 
-            showResult(inputElem2, outputElem, '两次输入不一致', 'fail');  
+        } else if (inputElem1.value === inputElem2.value) {
+            res = true;
+            showResult(inputElem2, outputElem, '输入一致', 'success');
+        } else {
+            showResult(inputElem2, outputElem, '两次输入不一致', 'fail'); 
+        }
+        return res; 
     }
 
     function validateEmail (inputElem, outputElem) {
+        var res = true;
         //const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         const pattern = /^\w+(\.\w+)*@\w+(\.[a-zA-Z]+)+$/;
         const value = inputElem.value.trim()        
 
-        if (value.length === 0) return;
+        if (value.length !== 0) {
+            if (pattern.test(value)) { 
+                showResult(inputElem, outputElem, '格式正确', 'success');  
+            } else {
+                res = false;
+                showResult(inputElem, outputElem, '格式不正确', 'fail');  
+            }
+        }
 
-        if (pattern.test(value)) 
-            showResult(inputElem, outputElem, '格式正确', 'success');  
-        else 
-            showResult(inputElem, outputElem, '格式不正确', 'fail');  
+        return res;
     }
         
     function validatePhone (inputElem, outputElem) {
+        var res = true;
         const pattern = /^1\d{10}$/;
         const value = inputElem.value.trim()        
 
-        if (value.length === 0) return;
+        if (value.length !== 0) {
+            if (pattern.test(value)) {
+                showResult(inputElem, outputElem, '格式正确', 'success');  
+            } else { 
+                res = false;
+                showResult(inputElem, outputElem, '格式不正确', 'fail'); 
+            }
+        }
 
-        if (pattern.test(value)) 
-            showResult(inputElem, outputElem, '格式正确', 'success');  
-        else 
-            showResult(inputElem, outputElem, '格式不正确', 'fail'); 
+        return res;
     }
 
 
