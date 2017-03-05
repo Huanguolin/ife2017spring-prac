@@ -1,112 +1,173 @@
 
 'use strict';
 
-(function () {    
-    // const value define
-    const MIN_STR_LEN = 4;
-    const MAX_STR_LEN = 16;
-    const NOTICE_INFO = [
-        '必填，长度为4-16个字符',
-        '必填，长度为6-12个字符',
-        '必填，必须与前一项输入一致',
-        '选填，需要附合邮箱的格式，如：example@test.com',
-        '选填，需要附合手机号码格式，如：188xxxx1234'
-    ];
-
+(function () {  
     // init 
     window.addEventListener('load', () => init());
-
-    var validateBtn;
-    var inputElems;
-    var spanElems;
         
+    /**
+     * initialize.
+     */
     function init () {
-        validateBtn = document.getElementsByTagName('button')[0];
-        inputElems = document.getElementsByTagName('input');
-        spanElems = document.getElementsByTagName('span');
-
-        var rules1 = [
-            {
-                validator: function (value) {
-                    const len = getStrLen(value.trim());                     
-                    if (len === 0)
-                        notice(inputElems[0], noticeElems[0], '必填，需要4-16字符');  
-                    
-                    return true;
-                },
-                trigger: 'focus' 
-            },
-            { 
-                validator: function (value) {
-                    const len = getStrLen(value.trim());       
-
-                    if (len === 0)
-                        notice(inputElems[0], noticeElems[0], '该项不能为空', false);  
-                    else if (len > MAX_STR_LEN )
-                        notice(inputElems[0], noticeElems[0], '不能多于16个字符', false);        
-                    else if (len < MIN_STR_LEN) 
-                        notice(inputElems[0], noticeElems[0], '不能少于4个字符', false);
-                    else {
-                        notice(inputElems[0], noticeElems[0], '格式正确', true);
-                        return true;
-                    }
-
-                    return false;
-                },
-                trigger: 'blur' 
-            }
+        const FOCUS_SHOW_INFO = [
+            '必填，长度为4-16个字符',
+            '必填，长度为6-12个字符',
+            '必填，必须与前一项输入一致',
+            '选填，例如：name@example.com',
+            '选填，例如：188xxxx1234'
         ];
-        var rules2 = [
-            {
-                validator: function (value) {
-                    const len = getStrLen(value.trim());                     
-                    if (len === 0)
-                        notice(inputElems[1], noticeElems[1], '必填，需要4-12字符');  
-                    
-                    return true;
-                },
-                trigger: 'focus' 
-            },
-            { 
-                validator: function (value) {
-                    const len = value.length;       
-
-                    if (len === 0)
-                        notice(inputElems[1], noticeElems[1], '该项不能为空', false);  
-                    else if (len > 12 )
-                        notice(inputElems[1], noticeElems[1], '不能多于12个字符', false);        
-                    else if (len < 4) 
-                        notice(inputElems[1], noticeElems[1], '不能少于4个字符', false);
-                    else {
-                        notice(inputElems[1], noticeElems[1], '格式正确', true);
-                        return true;
-                    }
-
-                    return false;
-                },
-                trigger: 'blur' 
-            }
+        const BLUR_DO_ACTION = [
+            validateName,
+            validatePasswd1,
+            validatePasswd2,
+            validateEmail,
+            validatePhone,
         ];
+
+        var validateBtn = document.getElementsByTagName('button')[0];
+        var inputElems = document.getElementsByTagName('input');
+        var spanElems = document.getElementsByTagName('span');
+
+        const handleFocusEvent = i => {
+            showResult(
+                inputElems[i],
+                spanElems[i],
+                FOCUS_SHOW_INFO[i],
+                'none');
+        };
+        const handleBlurEvent = i => {
+            if (BLUR_DO_ACTION[i] === validatePasswd2)
+                validatePasswd2(inputElems[i-1], inputElems[i], spanElems[i]);
+            else 
+                BLUR_DO_ACTION[i](inputElems[i], spanElems[i]);
+        };
 
         Array.prototype.forEach.call(inputElems, (e, i) => {
-            e.addEventListener('focus', i => focusNotice(i));
+            e.addEventListener('focus', () => handleFocusEvent(i));
+            e.addEventListener('blur', () => handleBlurEvent(i));
         });
 
         validateBtn.addEventListener('click', (e) => {
+            BLUR_DO_ACTION.forEach((v, i) => handleBlurEvent(i));
+
             e.preventDefault();
         });
     }
 
-    function focusNotice (index) {
-        if (spanElems[index].childNodes) {
-            spanElems[index].childNodes[0].nodeValue = NOTICE_INFO[index];
-            spanElems[index].style.color = '#aaa';
-        } else {
-            spanElems[index].appendChild(document.createTextNode(msg));
+    /* validators */
+    function validateName (inputElem, outputElem) {
+        const MAX_LEN = 16;
+        const MIN_LEN = 4;
+
+        const len = getNameLen(inputElem.value.trim());       
+        const res = validateLen(len, MAX_LEN, MIN_LEN);
+        if (res)
+            showResult(inputElem, outputElem, res, 'fail');  
+        else 
+            showResult(inputElem, outputElem, '格式正确', 'success');
+    }
+    
+    function validatePasswd1 (inputElem, outputElem) {        
+        const MAX_LEN = 12;
+        const MIN_LEN = 6;
+
+        const len = inputElem.value.length;      
+        const res = validateLen(len, MAX_LEN, MIN_LEN);       
+
+        if (res)
+            showResult(inputElem, outputElem, res, 'fail');  
+        else 
+            showResult(inputElem, outputElem, '格式正确', 'success');
+    }
+        
+    function validatePasswd2 (inputElem1, inputElem2, outputElem) {     
+        if (inputElem1.value.length === 0)
+            showResult(inputElem2, outputElem, '前一项不能为空', 'fail');
+        else if (inputElem1.value === inputElem2.value)
+            showResult(inputElem2, outputElem, '格式正确', 'success');
+        else 
+            showResult(inputElem2, outputElem, '两次输入不一致', 'fail');  
+    }
+
+    function validateEmail (inputElem, outputElem) {
+        //const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const pattern = /^\w+(\.\w+)*@\w+(\.[a-zA-Z]+)+$/;
+        const value = inputElem.value.trim()        
+
+        if (value.length === 0) return;
+
+        if (pattern.test(value)) 
+            showResult(inputElem, outputElem, '格式正确', 'success');  
+        else 
+            showResult(inputElem, outputElem, '格式不正确', 'fail');  
+    }
+        
+    function validatePhone (inputElem, outputElem) {
+        const pattern = /^1\d{10}$/;
+        const value = inputElem.value.trim()        
+
+        if (value.length === 0) return;
+
+        if (pattern.test(value)) 
+            showResult(inputElem, outputElem, '格式正确', 'success');  
+        else 
+            showResult(inputElem, outputElem, '格式不正确', 'fail'); 
+    }
+
+
+    /* common functions */
+    function validateLen (len, max, min) {
+        var res;
+
+        if (len === 0)
+            res = '该项不能为空';  
+        else if (len > max )
+            res = `不能多于${max}个字符`;        
+        else if (len < min) 
+            res = `不能少于${min}个字符`;
+
+        return res;
+    }
+
+    function showResult (input, span, msg, result) {
+        showMessage(span, msg);
+        changeStyle(input, span, result);
+    }
+
+    function changeStyle (inputElem, outputElem, result) {
+        switch (result) {
+            case 'success': 
+                inputElem.classList.remove('border-danger');
+                inputElem.classList.add('border-success');
+                outputElem.classList.remove('text-danger');
+                outputElem.classList.add('text-success');
+                break;
+
+            case 'fail':
+                inputElem.classList.remove('border-success');
+                inputElem.classList.add('border-danger');
+                outputElem.classList.remove('text-success');
+                outputElem.classList.add('text-danger');
+                break; 
+            
+            case 'none': 
+                inputElem.classList.remove('border-success');
+                inputElem.classList.remove('border-danger');
+                outputElem.classList.remove('text-success');
+                outputElem.classList.remove('text-danger');
+                break;
         }
     }
 
-    function getStrLen (str) {   
+    function showMessage (outputElem, msg) {
+        if (outputElem.childNodes[0]) {
+            outputElem.childNodes[0].nodeValue = msg;
+        } else {
+            outputElem.appendChild(document.createTextNode(msg));
+        }
+    }
+
+    function getNameLen (str) {
         var enLen = 0;
         var zhLen = 0;
 

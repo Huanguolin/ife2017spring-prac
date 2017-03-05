@@ -25,11 +25,11 @@ ul {
     padding: 5px 50px 7px 20px;
     text-align: right; 
 }
-.form-item > label { 
+label { 
     font-size: 1.2em; 
     font-weight: bold;
 }
-.form-item > label > input {
+input {
     box-sizing: border-box;
     margin-left: 20px;
     width: 350px;
@@ -39,8 +39,8 @@ ul {
     border-radius: 5px;
     outline: none; 
 }
-.form-item > label > input:focus { border-color: rgb(77, 144, 254); }
-.form-item > span {
+input:focus { border-color: rgb(77, 144, 254); }
+span {
     display: block;
     height: 1.1em;
     margin: 5px 120px;
@@ -61,6 +61,12 @@ button {
     background: #2f79ba;
     cursor: pointer;
 }
+
+/* dynamic class */
+.border-success { border-color: green; }
+.border-danger  { border-color: red; }
+.text-success  { color: green; }
+.text-danger   { color: red; }
 
 /* tool class */
 .clearfix:after { 
