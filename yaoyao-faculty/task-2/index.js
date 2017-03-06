@@ -24,9 +24,9 @@
             validatePhone,
         ];
 
-        var validateBtn = document.getElementsByTagName('button')[0];
-        var inputElems = document.getElementsByTagName('input');
-        var spanElems = document.getElementsByTagName('span');
+        let validateBtn = document.getElementsByTagName('button')[0];
+        let inputElems = document.getElementsByTagName('input');
+        let spanElems = document.getElementsByTagName('span');
 
         const handleFocusEvent = i => {
             showResult(
@@ -36,10 +36,11 @@
                 'none');
         };
         const handleBlurEvent = i => {
-            if (BLUR_DO_ACTION[i] === validatePasswd2)
+            if (BLUR_DO_ACTION[i] === validatePasswd2) {
                 return validatePasswd2(inputElems[i-1], inputElems[i], spanElems[i]);
-            else 
+            } else {
                 return BLUR_DO_ACTION[i](inputElems[i], spanElems[i]);
+            } 
         };
 
         Array.prototype.forEach.call(inputElems, (e, i) => {
@@ -48,17 +49,16 @@
         });
 
         validateBtn.addEventListener('click', (e) => {
-            var res = true;
+            let res = true;
             BLUR_DO_ACTION.forEach((v, i) => {
                 const r = handleBlurEvent(i);
                 res = res && r;
             });
 
-            if (res)
-                alert('提交成功！');
-            else 
-                alert('提交失败！');
+            const msg = res ? '提交成功!' : '提交失败!';
+            alert(msg);
 
+            // disable form default behavior
             e.preventDefault();
         });
     }
@@ -68,7 +68,7 @@
         const MAX_LEN = 16;
         const MIN_LEN = 4;
 
-        var res = false;
+        let res = false;
         const len = getNameLen(inputElem.value.trim());       
         const msg = validateLen(len, MAX_LEN, MIN_LEN);
         if (msg) {
@@ -84,7 +84,7 @@
         const MAX_LEN = 12;
         const MIN_LEN = 6;
 
-        var res = false;
+        let res = false;
         const len = inputElem.value.length;      
         const msg = validateLen(len, MAX_LEN, MIN_LEN);
         if (msg) {
@@ -97,7 +97,7 @@
     }
         
     function validatePasswd2 (inputElem1, inputElem2, outputElem) { 
-        var res = false;
+        let res = false;
         if (inputElem1.value.length === 0) {
             showResult(inputElem2, outputElem, '前一项不能为空', 'fail');
         } else if (inputElem1.value === inputElem2.value) {
@@ -110,7 +110,7 @@
     }
 
     function validateEmail (inputElem, outputElem) {
-        var res = true;
+        let res = true;
         //const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         const pattern = /^\w+(\.\w+)*@\w+(\.[a-zA-Z]+)+$/;
         const value = inputElem.value.trim()        
@@ -128,7 +128,7 @@
     }
         
     function validatePhone (inputElem, outputElem) {
-        var res = true;
+        let res = true;
         const pattern = /^1\d{10}$/;
         const value = inputElem.value.trim()        
 
@@ -147,14 +147,15 @@
 
     /* common functions */
     function validateLen (len, max, min) {
-        var res;
+        let res;
 
-        if (len === 0)
+        if (len === 0) {
             res = '该项不能为空';  
-        else if (len > max )
+        } else if (len > max ) {
             res = `不能多于${max}个字符`;        
-        else if (len < min) 
+        } else if (len < min) {
             res = `不能少于${min}个字符`;
+        }
 
         return res;
     }
@@ -167,48 +168,39 @@
     function changeStyle (inputElem, outputElem, result) {
         switch (result) {
             case 'success': 
-                inputElem.classList.remove('border-danger');
-                inputElem.classList.add('border-success');
-                outputElem.classList.remove('text-danger');
-                outputElem.classList.add('text-success');
+                inputElem.className = 'border-success';
+                outputElem.className = 'text-success';
                 break;
 
             case 'fail':
-                inputElem.classList.remove('border-success');
-                inputElem.classList.add('border-danger');
-                outputElem.classList.remove('text-success');
-                outputElem.classList.add('text-danger');
+                inputElem.className = 'border-danger';
+                outputElem.className = 'text-danger';
                 break; 
             
             case 'none': 
-                inputElem.classList.remove('border-success');
-                inputElem.classList.remove('border-danger');
-                outputElem.classList.remove('text-success');
-                outputElem.classList.remove('text-danger');
+                inputElem.className = '';
+                outputElem.className = '';
                 break;
         }
     }
 
     function showMessage (outputElem, msg) {
-        if (outputElem.childNodes[0]) {
-            outputElem.childNodes[0].nodeValue = msg;
-        } else {
-            outputElem.appendChild(document.createTextNode(msg));
-        }
+        outputElem.innerHTML = msg;
     }
 
     function getNameLen (str) {
-        var enLen = 0;
-        var zhLen = 0;
+        let enLen = 0;
+        let zhLen = 0;
 
         // 'for...of' is ES6 grammer!
         // It split string correctly 
         // when the chinese charactor code value over '0xFFFF'. 
         for (let ch of str) {
-            if (isASCII(ch))
+            if (isASCII(ch)) {
                 enLen++;
-            else 
+            } else {
                 zhLen++;
+            }
         } 
 
         // one ascii length is 1
