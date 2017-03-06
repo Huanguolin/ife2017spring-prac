@@ -15,17 +15,41 @@ const MAX_STR_LEN = 16;
         const noticeElem = document.getElementById('notice');  
 
         const notice = (isSuccess, msg) => {
-            noticeElem.childNodes[0].nodeValue = msg;
+            /* 
+             * ===========1=============
+             * As tutor 'wuhy09' say:
+             * 
+             * 'nodeValue' make reader confusing,
+             *  and textContent/innerText/innerHTML is clear more! 
+             */
+            noticeElem.textContent = msg;
+            /*noticeElem.childNodes[0].nodeValue = msg;*/
+
             if (isSuccess) {
-                inputElem.classList.remove('input-warn');
-                inputElem.classList.add('input-success');
+                /* 
+                 * ===========2=============
+                 * As tutor 'wuhy09' say:
+                 * 
+                 * Use className instand of classList!
+                 * Make it more simple and more compatible.
+                 */
+                inputElem.className = 'border-success';
+                noticeElem.className = 'text-success';
+                /*
+                inputElem.classList.remove('border-warn');
+                inputElem.classList.add('border-success');
                 noticeElem.classList.remove('text-warn');
                 noticeElem.classList.add('text-success');
+                */
             } else {
-                inputElem.classList.remove('input-success');
-                inputElem.classList.add('input-warn');
+                inputElem.className = 'border-warn';
+                noticeElem.className = 'text-warn';                
+                /*
+                inputElem.classList.remove('border-success');
+                inputElem.classList.add('border-warn');
                 noticeElem.classList.remove('text-success');
                 noticeElem.classList.add('text-warn');            
+                */
             }
         }
 
@@ -48,18 +72,41 @@ const MAX_STR_LEN = 16;
         });
     }
 
-    function getStrLen (str) {   
+    function getStrLen (str) { 
+        /* 
+         * ===========3=============
+         * As tutor 'wuhy09' say:
+         * 
+         * Don't use 'var' any more in ES6 grammer.
+         */  
+        let enLen = 0;
+        let zhLen = 0;
+        /*
         var enLen = 0;
         var zhLen = 0;
+        */
 
         // 'for...of' is ES6 grammer!
         // It split string correctly 
         // when the chinese charactor code value over '0xFFFF'. 
         for (let ch of str) {
-            if (isASCII(ch))
+            /* 
+             * ===========4=============
+             * As tutor 'wuhy09' say:
+             * 
+             * To keep with '{}' always.
+             */ 
+            if (isASCII(ch)) {
+                enLen++;
+            } else {
+                zhLen++;
+            }
+            /*
+            if (isASCII(ch)) 
                 enLen++;
             else 
                 zhLen++;
+            */
         } 
 
         // one ascii length is 1

@@ -24,7 +24,7 @@ label {
 }
 input {
     box-sizing: border-box;
-    width: 250px;
+    width: 300px;
     padding: 10px;
     font-size: 1.3em;
     border: 2px solid #bbb;
@@ -51,7 +51,7 @@ span {
 
 
 /* dynamic class */
-.input-warn      { border-color: orangered; }
-.input-success   { border-color: limegreen; }
+.border-warn      { border-color: orangered; }
+.border-success   { border-color: limegreen; }
 .text-warn       { color: orangered; }
 .text-success    { color: limegreen; }
