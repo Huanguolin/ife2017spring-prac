@@ -1,4 +1,4 @@
-# task-2(我的实现[demo](https://huanguolin.github.io/ife2017spring-prac/yaoyao-faculty/task-3/index.html))
+# task-3(我的实现[demo](https://huanguolin.github.io/ife2017spring-prac/yaoyao-faculty/task-3/index.html))
 
 ### 任务[描述](http://ife.baidu.com/course/detail/id/106) 
        
