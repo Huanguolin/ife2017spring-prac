@@ -17,26 +17,33 @@
      * initialize.
      */
     function init () {
-        // choose role part 
+        /* choose role part */
         const radios = document.querySelectorAll('input[type="radio"]');
         const radioContainer = document.querySelector('.radio');
         const selectContainer = document.querySelector('.select');
         const textContainer = document.querySelector('.text');
-        radioContainer.addEventListener('change',  () => {            
-            if (radios[0].checked) {
-                addClass(textContainer, 'hidden');
-                removeClass(selectContainer, 'hidden');
+        const switchDiplay = isStudent => {
+            if (isStudent) {
+                selectContainer.style.display = 'inline-block';
+                textContainer.style.display = 'none';
             } else {
-                addClass(selectContainer, 'hidden');
-                removeClass(textContainer, 'hidden');
+                selectContainer.style.display = 'none';
+                textContainer.style.display = 'inline-block';
             }
-        });
+        };
+        // init 
+        radios[0].setAttribute('checked', true);
+        switchDiplay(true);
+        // add event handle
+        radioContainer.addEventListener('change',  e => switchDiplay(radios[0].checked));
 
-        // choose city and school part 
+        /* choose city and school part  */
         const citySelect = document.querySelector('select[name="city"]');
         const schoolSelect = document.querySelector('select[name="school"]');
+        // init
         replaceSelectItems(citySelect, CITY_LIST, 0);
         replaceSelectItems(schoolSelect, SCHOOL_LIST[CITY_LIST[0]]);
+        // add event handle
         citySelect.addEventListener('change', e => {  
             const targetCity = e.target.value;          
             replaceSelectItems(schoolSelect, SCHOOL_LIST[targetCity]);
@@ -60,16 +67,6 @@
 
             selectElem.appendChild(e);
         });
-    }
-
-    function removeClass (element, className) {
-        let classes = element.className;
-        element.className = classes.replace(' ' + className, '');
-    }
-        
-    function addClass (element, className) {
-        let classes = element.className;
-        element.className = classes.concat(' ' + className);
     }
 })();
 
