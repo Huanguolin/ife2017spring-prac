@@ -55,6 +55,7 @@
         selectElem.innerHTML = '';
 
         // append 
+        const fragment = document.createDocumentFragment();
         items.forEach( (v, i) => {
             let e = document.createElement("OPTION");
             let t = document.createTextNode(items[i]);
@@ -65,8 +66,9 @@
                 e.setAttribute('selected', true);
             }
 
-            selectElem.appendChild(e);
+            fragment.appendChild(e);
         });
+        selectElem.appendChild(fragment);
     }
 })();
 
