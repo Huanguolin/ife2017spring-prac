@@ -22,20 +22,20 @@
         const radioContainer = document.querySelector('.radio');
         const selectContainer = document.querySelector('.select');
         const textContainer = document.querySelector('.text');
-        const switchDiplay = isStudent => {
+        const switchDisplay = isStudent => {
             if (isStudent) {
-                selectContainer.style.display = 'inline-block';
+                selectContainer.style.display = 'block';
                 textContainer.style.display = 'none';
             } else {
                 selectContainer.style.display = 'none';
-                textContainer.style.display = 'inline-block';
+                textContainer.style.display = 'block';
             }
         };
         // init 
         radios[0].setAttribute('checked', true);
-        switchDiplay(true);
+        switchDisplay(true);
         // add event handle
-        radioContainer.addEventListener('change',  e => switchDiplay(radios[0].checked));
+        radioContainer.addEventListener('change',  e => switchDisplay(radios[0].checked));
 
         /* choose city and school part  */
         const citySelect = document.querySelector('select[name="city"]');
