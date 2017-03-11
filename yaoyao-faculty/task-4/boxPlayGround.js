@@ -28,6 +28,8 @@ function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
     Object.defineProperties(this, {
         xMax: { get () { return _data._xMax; } },
         yMax: { get () { return _data._yMax; } },
+        mountPoint: { get () { return _data._mountPoint; } },
+        isRendered: { get () { return _data._isRendered; } },
         x: {
             set (val) { _data._x = _validateIntergerValue(true, val, 0, _data._xMax); },
             get () { return _data._x; }
@@ -47,7 +49,7 @@ function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
     };
 
     BoxPlayGround.prototype.render = () => {
-        if (_data._isRendered) return;
+        if (this.isRendered) return;
 
         /* TODO: render */
 
@@ -63,7 +65,7 @@ function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
         }
 
         // update UI
-        if (_data._isRendered) update();
+        if (this.isRendered) update();
     };
     
     BoxPlayGround.prototype.turnTo = direct => {
@@ -88,7 +90,7 @@ function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
         this.direction = DIRECTIONS[newIndex];
 
         // update UI
-        if (_data._isRendered) update();
+        if (this.isRendered) update();
     }  
 }
 
