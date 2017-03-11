@@ -51,16 +51,15 @@ function _validateDirection (val) {
     return DIRECTIONS[index];
 } 
 
-class Box {
+class BoxGround {
 
     /**
-     * 
-     * Use to create an box instance.
+     * Use to create an BoxGround instance.
      * 
      * @param {Number} xMax x-axis maximum
      * @param {Number} yMax y-axis maximum
      */
-    constructor (xMax, yMax, x = 0, y = 0, direction = 'E') {
+    constructor (xMax, yMax) {
         const _data = {
             _xMax: _validateIntergerValue(false, xMax, 1),
             _yMax: _validateIntergerValue(false, yMax, 1),
