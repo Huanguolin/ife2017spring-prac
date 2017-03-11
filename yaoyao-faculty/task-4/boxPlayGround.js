@@ -13,7 +13,7 @@ const DIRECTIONS = ['N', 'E', 'S', 'W'];
  * @param {Number} yMax y-axis maximum (optional)
  */
 function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
-    if (!mountPoint || !(mountPoint instanceof Element)) new Error('"mountPoint" is invalid!');
+    if (!mountPoint || !(mountPoint instanceof Element)) throw new Error('"mountPoint" is invalid!');
 
     const _data = {
         _xMax: _validateIntergerValue(false, xMax, 1),
