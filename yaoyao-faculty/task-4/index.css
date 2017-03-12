@@ -3,82 +3,36 @@ body {
     font-size: 16px;
     line-height: 1.2;
     background: black;
+    text-align: center;
 }
 
-/* form basic style */
-form {
+#demo {
+    margin-top: 50px;
+}
+.input {
     box-sizing: border-box;
-    width: 800px;
-    margin: 100px auto;
-    padding: 30px;
+    width: 602px;
+    margin: 0 auto;
+    padding-bottom: 50px;
     background: white;
-    border-radius: 5px;
 }
-ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-.form-item {  padding: 20px 50px; }
-.form-item > label { font-size: 1.1em; }
-
-
-/* radio type style */
-.radio { text-align: center; }
-.radio label:first-child { margin-right: 250px; }
-.radio input[type="radio"] { display: none; }
-.radio span {
-    display: inline-block;
-    margin: -1px 8px 0 0;
-    vertical-align: middle;
-    cursor: pointer;
-    border-radius: 50%;
-}
-.radio input[type="radio"] + span {  
-    width: 22px;
-    height: 22px;
-    border: 1px solid #ccc;  
-}
-.radio input[type="radio"]:checked + span { 
-    width: 8px;
-    height: 8px;
-    border: 8px solid #3796fa;
-}
-
-
-/* select type style */
-.select { text-align: right; }
-.select select { 
-    box-sizing: border-box;     
-    width: 150px;
-    margin-left: 20px;
-    padding: 10px;
-    font-size: 1em;
-    border: 2px solid #bbb;
-    border-radius: 5px;
-    outline: none; 
- }
- .select select:last-child {     
-    width: 350px;
-    margin-left: 36px;
- }
-
-/* text type style */
-.text { text-align: right; }
-.text input {
+.input > input {
     box-sizing: border-box;
-    margin-left: 20px;
-    width: 540px;
+    margin-right: 20px;
+    width: 300px;
     padding: 10px;
-    font-size: .9em;
+    font-size: 1.1em;
+    line-height: 1.2em;
     border: 2px solid #bbb;
     border-radius: 5px;
     outline: none; 
 }
-.text input:focus { border-color: rgb(77, 144, 254); }
-
-
-/* tool style */
-.hidden {
-    display: none;
+.input > input:focus { border-color: rgb(77, 144, 254); }
+.input > button {
+    padding: 5px 10px;
+    font-size: 1.1em;
+    line-height: 1.2em;
+    border-radius: 5px;
+    outline: none; 
 }
+

@@ -1,16 +1,15 @@
 
-// this file depend on 'common.js'
-
 'use strict';
 
 const DIRECTIONS = ['N', 'E', 'S', 'W'];
+const ANGLE = ['0deg', '90deg', '180deg', '-90deg'];
 
 /**
  * BoxPlayGround constructor.
  * 
  * @param {Element} mountPoint BoxPlayGround mount point 
- * @param {Number} xMax x-axis maximum (optional)
- * @param {Number} yMax y-axis maximum (optional)
+ * @param {Number} xMax x-axis maximum (optional, defualt is 10)
+ * @param {Number} yMax y-axis maximum (optional, default is 10)
  */
 function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
     if (!mountPoint || !(mountPoint instanceof Element)) throw new Error('"mountPoint" is invalid!');
@@ -19,10 +18,11 @@ function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
         _xMax: _validateIntergerValue(false, xMax, 1),
         _yMax: _validateIntergerValue(false, yMax, 1),             
         _mountPoint: mountPoint,
+        _box: null, // inner use only
         _isRendered: false, 
         _x: 0,
         _y: 0,
-        _direction: 'E'
+        _direction: 'N'
     };
 
     Object.defineProperties(this, {
@@ -31,28 +31,82 @@ function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
         mountPoint: { get () { return _data._mountPoint; } },
         isRendered: { get () { return _data._isRendered; } },
         x: {
-            set (val) { _data._x = _validateIntergerValue(true, val, 0, _data._xMax); },
+            set (val) { 
+                _data._x = _validateIntergerValue(true, val, 0, _data._xMax - 1);
+
+                // update UI
+                if (this.isRendered) {
+                    updateX(); 
+                }
+            },
             get () { return _data._x; }
         },
         y: {
-            set (val) { _data._y = _validateIntergerValue(true, val, 0, _data._yMax); },
+            set (val) { 
+                _data._y = _validateIntergerValue(true, val, 0, _data._yMax - 1); 
+
+                // update UI
+                if (this.isRendered)  {
+                    updateY();
+                }
+            },
             get () { return _data._y; }
         },
         direction: {
-            set (val) { _data._direction = _validateDirection(val); },
+            set (val) { 
+                _data._direction = _validateDirection(val); 
+
+                // update UI
+                if (this.isRendered) {
+                    updateDirection();
+                };
+            },
             get () { return _data._direction; }
         }
     });
 
-    const update = () => {
-        /* TODO update */
+    const updateX = () => _data._box.style.left = (this.x * 50) + 'px';
+    const updateY = () => _data._box.style.top = (this.y * 50) + 'px';
+    const updateDirection = () => {
+        const index = DIRECTIONS.indexOf(this.direction);
+        _data._box.style.transform = `rotate(${ANGLE[index]})`
+    };
+    const updateAll = () => {        
+            updateX();
+            updateY();
+            updateDirection();
     };
 
     BoxPlayGround.prototype.render = () => {
+        // check flag
         if (this.isRendered) return;
 
-        /* TODO: render */
+        /* ==== render ==== */
+        let rootDiv = document.createElement('DIV');
+        let playGroundDiv = document.createElement('DIV');
+        let boxDiv = document.createElement('DIV');
+        let xAxisUl = _createAxis(true, this.xMax); 
+        let yAxisUl = _createAxis(false, this.yMax); 
+        rootDiv.className = 'drive-box';
+        playGroundDiv.className = 'box-play-ground';
+        boxDiv.className = 'box';
+        // set box play ground size 
+        playGroundDiv.style.width = (this.xMax * 50 - 2) + 'px';
+        playGroundDiv.style.height = (this.yMax * 50 - 2) + 'px';
+        // Assemble all this piece
+        playGroundDiv.appendChild(boxDiv);
+        rootDiv.appendChild(xAxisUl);
+        rootDiv.appendChild(yAxisUl);
+        rootDiv.appendChild(playGroundDiv);
+        // remeber box elment 
+        _data._box = boxDiv;
+        // update all
+        updateAll();
+        // append it to mount point 
+        this.mountPoint.innerHTML = '';
+        this.mountPoint.appendChild(rootDiv);
 
+        // set flag
         _data._isRendered = true;
     };
 
@@ -63,16 +117,12 @@ function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
             case 'S': this.y++; break; 
             case 'W': this.x--; break;
         }
-
-        // update UI
-        if (this.isRendered) update();
     };
     
-    BoxPlayGround.prototype.turnTo = direct => {
+    BoxPlayGround.prototype.turnTo = direct => {        
         const lastIndex = DIRECTIONS.indexOf(this.direction);
         const len = DIRECTIONS.length;
         let ov;
-
         switch (direct.trim().toUpperCase()) {
             case 'LEF'  :
             case 'LEFT' : ov = -1; break; 
@@ -80,17 +130,13 @@ function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
             case 'RIGHT': ov = 1; break; 
             case 'BAC'  : 
             case 'BACK' : ov = 2; break; 
+            default: throw new Error('Invalid command: ' + direct); break;
         }
-
         let newIndex = lastIndex + ov;
         if (newIndex >= len) newIndex -= len;
         if (newIndex < 0) newIndex += len;
-
         // set direction
         this.direction = DIRECTIONS[newIndex];
-
-        // update UI
-        if (this.isRendered) update();
     }  
 }
 
@@ -143,3 +189,17 @@ function _validateDirection (val) {
     }
     return DIRECTIONS[index];
 } 
+
+function _createAxis (isX, len) {
+    let ul = document.createElement('UL');
+    ul.className = isX ? 'x-axis' : 'y-axis';
+
+    for (let i = 0; i < len; i++) {
+        let li = document.createElement('LI');
+        let t = document.createTextNode(i+1);
+        li.appendChild(t);
+        ul.appendChild(li);
+    }
+    
+    return ul;
+}

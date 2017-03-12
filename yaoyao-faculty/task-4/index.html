@@ -2,31 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Task-3 Auto Switch Form Item</title>
+    <title>Task-4 Drive the Box</title>
+    <link rel="stylesheet" href="boxPlayGround.css">
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <form>
-        <ul>
-            <li class="form-item radio">
-                <label><input type="radio" name="chose"><span></span>在校生</label>
-                <label><input type="radio" name="chose"><span></span>非在校生</label>
-            </li>
-            <li class="form-item select">
-                <label>
-                    学校
-                    <select name="city">              
-                    </select>
-                    <select name="school">         
-                    </select>
-                </label>
-            </li>
-            <li class="form-item text">
-                <label>就业单位<input type="text"></label>
-            </li>
-        </ul>
-    </form>
+    <div id="demo">        
+        <div id="mount-point"></div>
+        <div class="input">
+            <input type="text">
+            <button>执行</button>
+        </div>
+    </div>
 
+    <script src="boxPlayGround.js"></script>
     <script src="index.js"></script>
 </body>
 </html>
