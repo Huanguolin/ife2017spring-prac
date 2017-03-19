@@ -43,7 +43,7 @@ describe.only('lib/holdem#computeLevel', () => {
         return res;
     };
 
-    const tests = [
+    const test_level_8 = [
         /* Straight Flush */
         // input len is 5
         { args: [[2, 3, 4, 5, 6], [0, 0, 0, 0, 0]],     expected: [8, [2, 3, 4, 5, 6], [0, 0, 0, 0, 0]] },
@@ -60,18 +60,30 @@ describe.only('lib/holdem#computeLevel', () => {
         { args: [[0, 1, 2, 3, 4, 5, 6], [3, 3, 2, 2, 2, 2, 2]],     expected: [8, [2, 3, 4, 5, 6], [2, 2, 2, 2, 2]] },
         { args: [[6, 7, 8, 9, 10, 11, 12], [1, 1, 1, 1, 1, 0, 0]],  expected: [8, [6, 7, 8, 9, 10], [1, 1, 1, 1, 1]] },
         { args: [[0, 2, 8, 9, 10, 11, 12], [3, 0, 0, 3, 3, 3, 3]],  expected: [8, [9, 10, 11, 12, 0], [3, 3, 3, 3, 3]] },  
-
-        /* Four of a kind */
-        // input len is 5
-        { args: [[1, 9, 9, 9, 9], [1, 0, 1, 2, 3]],  expected: [7, [9, 9, 9, 9, 1], [0, 1, 2, 3, 1]] },
-        { args: [[0, 0, 0, 0, 9], [0, 1, 2, 3, 0]],     expected: [7, [0, 0, 0, 0, 9], [0, 1, 2, 3, 0]] },
-        { args: [[8, 12, 12, 12, 12], [1, 0, 1, 2, 3]],  expected: [7, [12, 12, 12, 12, 8], [0, 1, 2, 3, 1]] },
-        // input len is 6 
     ];
-    tests.forEach(function(test) {
-        let desc = `input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
+    test_level_8.forEach(function(test) {
+        let desc = `test level 8, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
         it(desc, () => {
             let input = createPokers(test.args[0], test.args[1]);
+            let output = createPokers(test.expected[1], test.expected[2], false);
+            let res = computeLevel(input);
+            //console.log(res);
+            expect(res.level === test.expected[0] && pokersDeepEql(res.pokers, output)).to.be.true;
+        });
+    });
+
+    const test_level_7 = [
+        /* Four of a kind */
+        // input len is 5
+        { args: [[9, 9, 1, 9, 9], [0, 1, 1, 2, 3]],     expected: [7, [9, 9, 9, 9, 1], [0, 1, 2, 3, 1]] },
+        { args: [[0, 0, 0, 0, 9], [0, 1, 2, 3, 0]],     expected: [7, [0, 0, 0, 0, 9], [0, 1, 2, 3, 0]] },
+        { args: [[8, 12, 12, 12, 12], [1, 0, 1, 2, 3]], expected: [7, [12, 12, 12, 12, 8], [0, 1, 2, 3, 1]] },
+        // input len is 6 
+    ];
+    test_level_7.forEach(function(test) {
+        let desc = `test level 7, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
+        it(desc, () => {
+            let input = createPokers(test.args[0], test.args[1], false);
             let output = createPokers(test.expected[1], test.expected[2], false);
             let res = computeLevel(input);
             console.log(res);

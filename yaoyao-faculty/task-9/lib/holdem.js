@@ -48,46 +48,19 @@ class Holdem {
                     pokers: straight
                 };
             } else {
-                let tmp = getAtLeastLenVal(vMap, 2);
-                if (tmp.length && tmp[0].length === 4) {
-                    let fourOfAKind = tmp[0];
-                    pokers.sort( (a, b) => b.v - a.v);
-                    if (pokers[0] === fourOfAKind[0].v) {
-                        fourOfAKind.push(pokers[4]);
-                    } else {
-                        fourOfAKind.push(pokers[0]);
-                    }
-                    res = {
-                        level: 7,
-                        pokers: fourOfAKind
-                    };
-                } else if (tmp.length >= 2 &&
-                    tmp[0].length === 3 && 
-                    tmp[1].length === 2) {
-                    let fullHouse = tmp[0].concat(tmp[1]);            
-                    res = {
-                        level: 6,
-                        pokers: fullHouse
-                    };
-                } else {
-                    let len = flushs[0].length;
-                    let flush = flushs[0].sort( (a, b) => a.v - b.v).slice(-1, -6);
-                    res = {
-                        level: 5,
-                        pokers: flush
-                    };
-                }
+                let flush = flushs[0].sort( (a, b) => b.v - a.v).slice(0, 5);
+                res = {
+                    level: 5,
+                    pokers: flush
+                };
             }
         } else {
             let tmp = getAtLeastLenVal(vMap, 2);
             if (tmp.length && tmp[0].length === 4) {
                 let fourOfAKind = tmp[0];
                 pokers.sort( (a, b) => b.v - a.v);
-                if (pokers[0] === fourOfAKind[0].v) {
-                    fourOfAKind.push(pokers[4]);
-                } else {
-                    fourOfAKind.push(pokers[0]);
-                }
+                let ps = pokers.filter(v => v.v !== fourOfAKind[0].v);
+                fourOfAKind.push(ps[0]);
                 res = {
                     level: 7,
                     pokers: fourOfAKind
