@@ -5,7 +5,7 @@
  * t: 0/(B♠), 1/(R♠), 2/♣, 3/♦
  */
 
-import Util from './util';
+import Util from './Util';
 
 /**
  * Holdem is use to compute level or compare.
@@ -33,18 +33,128 @@ class Holdem {
         });
 
         /* compute level part */
+        let res;
         const getAtLeastLenVal = (map, len) => {
             let res = [];
             map.forEach( v => (v.length >= len) && res.push(v) );
             return res.sort( (a, b) => b.length - a.length);
         };
-        let tmp = getAtLeastLenVal(tMap, 5);
-        if (tmp.length > 0) {
-            
+        let flushs = getAtLeastLenVal(tMap, 5);
+        if (flushs.length > 0) {
+            let straight = Util.getStraight(flushs[0]);
+            if (straight) {
+                res = {
+                    level: 8,
+                    pokers: straight
+                };
+            } else {
+                let tmp = getAtLeastLenVal(vMap, 2);
+                if (tmp.length && tmp[0].length === 4) {
+                    let fourOfAKind = tmp[0];
+                    pokers.sort( (a, b) => b.v - a.v);
+                    if (pokers[0] === fourOfAKind[0].v) {
+                        fourOfAKind.push(pokers[4]);
+                    } else {
+                        fourOfAKind.push(pokers[0]);
+                    }
+                    res = {
+                        level: 7,
+                        pokers: fourOfAKind
+                    };
+                } else if (tmp.length >= 2 &&
+                    tmp[0].length === 3 && 
+                    tmp[1].length === 2) {
+                    let fullHouse = tmp[0].concat(tmp[1]);            
+                    res = {
+                        level: 6,
+                        pokers: fullHouse
+                    };
+                } else {
+                    let len = flushs[0].length;
+                    let flush = flushs[0].sort( (a, b) => a.v - b.v).slice(-1, -6);
+                    res = {
+                        level: 5,
+                        pokers: flush
+                    };
+                }
+            }
         } else {
-
+            let tmp = getAtLeastLenVal(vMap, 2);
+            if (tmp.length && tmp[0].length === 4) {
+                let fourOfAKind = tmp[0];
+                pokers.sort( (a, b) => b.v - a.v);
+                if (pokers[0] === fourOfAKind[0].v) {
+                    fourOfAKind.push(pokers[4]);
+                } else {
+                    fourOfAKind.push(pokers[0]);
+                }
+                res = {
+                    level: 7,
+                    pokers: fourOfAKind
+                };
+            } else if (tmp.length >= 2 &&
+                tmp[0].length === 3 && 
+                tmp[1].length === 2) {
+                let fullHouse = tmp[0].concat(tmp[1]);            
+                res = {
+                    level: 6,
+                    pokers: fullHouse
+                };
+            } else if (Util.getStraight(pokers)) {
+                res = {
+                    level: 4,
+                    pokers: Util.getStraight(pokers)
+                };
+            } else if (tmp.length && tmp[0].length === 3) {
+                let threeOfAKind = tmp[0];
+                pokers.sort( (a, b) => b.v - a.v);
+                if (pokers[0] === threeOfAKind[0].v) {
+                    threeOfAKind.concat(pokers[3], pokers[4]);
+                } else {
+                    threeOfAKind.push(pokers[0]);
+                    if (pokers[1] === threeOfAKind[0].v) {
+                        threeOfAKind.push(pokers[4]);
+                    } else {
+                        threeOfAKind.push(pokers[1]);
+                    }
+                }
+                res = {
+                    level: 3,
+                    pokers: threeOfAKind
+                };
+            } else if (tmp.length >= 2 &&
+                tmp[0].length === 2 && 
+                tmp[1].length === 2) {
+                let twoPair = tmp[0];
+                twoPair.concat(tmp[1]);
+                let ps = pokers.filter( v => v.v !== tmp[0][0] && v.v !== tmp[1][0]);
+                ps.sort( (a, b) => b.v - a.v);
+                twoPair.push(ps[0]);
+                res = {
+                    level: 2,
+                    pokers: twoPair
+                };
+            } else if (tmp.length === 1 && tmp[0].length === 2) {
+                let onePair = tmp[0];
+                let ps = pokers.filter( v => v.v !== tmp[0][0]);
+                ps.sort( (a, b) => b.v - a.v);
+                onePair.concat(ps.slice(0, 3));
+                res = {
+                    level: 1,
+                    pokers: onePair
+                };
+            } else {
+                pokers.sort( (a, b) => b.v - a.v);
+                let highCard = pokers.slice(0, 5);
+                res = {
+                    level: 0,
+                    pokers: highCard
+                };
+            }
         }
+
+        return res;
     }
 }
 
-
+export default Holdem;
