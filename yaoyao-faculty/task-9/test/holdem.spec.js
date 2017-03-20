@@ -4,7 +4,7 @@ import Holdem from '../lib/holdem';
 let expect = chai.expect;
 const computeLevel = Holdem.computeLevel;
 
-describe.only('lib/holdem#computeLevel', () => {
+describe('lib/holdem#computeLevel', () => {
     // tools
     const createPokers = function (valList, typeList, messIt = true) {
         let ret = valList.map( (v, i) => { 
