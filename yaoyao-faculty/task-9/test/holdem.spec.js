@@ -105,6 +105,10 @@ describe.only('lib/holdem#computeLevel', () => {
         { args: [[9, 9, 2, 2, 9], [0, 1, 1, 2, 3]],     expected: [6, [9, 9, 9, 2, 2], [0, 1, 3, 1, 2]] },
         { args: [[9, 0, 0, 0, 9], [3, 1, 2, 3, 0]],     expected: [6, [0, 0, 0, 9, 9], [1, 2, 3, 3, 0]] },
         { args: [[8, 12, 8, 12, 12], [1, 0, 3, 2, 3]],  expected: [6, [12, 12, 12, 8, 8], [0, 2, 3, 1, 3]] },
+        // input len is 6
+        { args: [[9, 9, 2, 2, 9, 12], [0, 1, 1, 2, 3, 3]],      expected: [6, [9, 9, 9, 2, 2], [0, 1, 3, 1, 2]] },
+        { args: [[9, 0, 0, 0, 9, 9], [3, 1, 2, 3, 0, 2]],       expected: [6, [9, 9, 9, 0, 0], [3, 0, 2, 1, 2]] },
+        { args: [[8, 12, 8, 12, 12, 8], [1, 0, 3, 2, 3, 0]],    expected: [6, [12, 12, 12, 8, 8], [0, 2, 3, 1, 3]] },
     ];
     test_level_6.forEach(function(test) {
         let desc = `test level 6, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
@@ -112,7 +116,7 @@ describe.only('lib/holdem#computeLevel', () => {
             let input = createPokers(test.args[0], test.args[1], false);
             let output = createPokers(test.expected[1], test.expected[2], false);
             let res = computeLevel(input);
-            //console.log(res);
+            console.log(res);
             expect(res.level === test.expected[0] && pokersDeepEql(res.pokers, output)).to.be.true;
         });
     });
