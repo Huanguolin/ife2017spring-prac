@@ -89,20 +89,18 @@ describe('holdem/util#getStraight ', () => {
         { args: [2, 3, 4, 5, 6],    expected: [2, 3, 4, 5, 6] },
         { args: [0, 1, 2, 3, 4],    expected: [0, 1, 2, 3, 4] },
         { args: [0, 1, 2, 3, 12],   expected: [12, 0, 1, 2, 3] },
-        { args: [8, 9, 10, 11, 12], expected: [8, 9, 10, 11, 12] },
 
         // input len is 6 
         { args: [2, 3, 4, 5, 6, 8],     expected: [2, 3, 4, 5, 6] },
         { args: [2, 3, 4, 5, 6, 7],     expected: [3, 4, 5, 6, 7] },
         { args: [0, 1, 2, 3, 7, 12],    expected: [12, 0, 1, 2, 3] },
-        { args: [7, 8, 9, 10, 11, 12],  expected: [8, 9, 10, 11, 12] },
 
         // input len is 7 
         { args: [2, 3, 4, 5, 6, 7, 12],     expected: [3, 4, 5, 6, 7] },
         { args: [2, 3, 4, 5, 6, 7, 8],      expected: [4, 5, 6, 7, 8] },
-        { args: [0, 1, 2, 3, 4, 11, 12],    expected: [0, 1, 2, 3, 4] },
         { args: [0, 1, 2, 3, 7, 11, 12],    expected: [12, 0, 1, 2, 3] },
-        { args: [6, 7, 8, 9, 10, 11, 12],   expected: [8, 9, 10, 11, 12] },
+        { args: [0, 1, 2, 3, 4, 6, 6],      expected: [0, 1, 2, 3, 4] },
+        { args: [8, 9, 10, 11, 11, 12, 12], expected: [8, 9, 10, 11, 12] },
     ];    
     tests.forEach(function(test) {
         let desc = `has straight, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 

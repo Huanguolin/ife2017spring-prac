@@ -4,7 +4,7 @@ import Holdem from '../holdem/holdem';
 let expect = chai.expect;
 const computeLevel = Holdem.computeLevel;
 
-describe.only('holdem/holdem#computeLevel', () => {
+describe('holdem/holdem#computeLevel', () => {
     // tools
     const createPokers = function (valList, typeList, messIt = true) {
         let ret = valList.map( (v, i) => { 
@@ -169,6 +169,7 @@ describe.only('holdem/holdem#computeLevel', () => {
         { args: [[0, 1, 2, 3, 4, 6, 6], [1, 2, 3, 0, 3, 1, 0]],     expected: [4, [0, 1, 2, 3, 4], [1, 2, 3, 0, 3]] },
         { args: [[8, 8, 9, 9, 10, 11, 12], [1, 0, 1, 0, 1, 3, 2]],  expected: [4, [8, 9, 10, 11, 12], ['*', '*', 1, 3, 2]] },
         { args: [[0, 1, 2, 3, 12, 12, 12], [3, 1, 1, 1, 3, 2, 1]],  expected: [4, [12, 0, 1, 2, 3], ['*', 3, 1, 1, 1]] },
+        { args: [[1, 2, 2, 2, 3, 4, 5], [0, 1, 2, 3, 0, 0, 0]],     expected: [4, [1, 2, 3, 4, 5], [0, '*', 0, 0, 0]] },
     ];
     test_level_4.forEach(function(test) {
         let desc = `test level 4, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
@@ -176,9 +177,98 @@ describe.only('holdem/holdem#computeLevel', () => {
             let input = createPokers(test.args[0], test.args[1]);
             let output = createPokers(test.expected[1], test.expected[2], false);
             let res = computeLevel(input);
-            console.log(res);
+            //console.log(res);
             expect(res.level === test.expected[0]).to.be.true;
             expect(pokersDeepEql(res.pokers, output.reverse())).to.be.true;
+        });
+    });
+
+    const test_level_3 = [
+        /* Straight */
+        // input len is 5
+        { args: [[2, 2, 2, 5, 9], [1, 2, 3, 0, 0]], expected: [3, [2, 2, 2, 9, 5], ['*', '*', '*', 0, 0]] },
+        { args: [[2, 2, 2, 3, 4], [1, 2, 3, 0, 0]], expected: [3, [2, 2, 2, 4, 3], ['*', '*', '*', 0, 0]] },
+        // input len is 6
+        { args: [[2, 2, 2, 5, 9, 11], [1, 2, 3, 0, 0, 0]], expected: [3, [2, 2, 2, 11, 9], ['*', '*', '*', 0, 0]] },
+        { args: [[2, 2, 2, 3, 4, 5], [1, 2, 3, 0, 0, 0]], expected: [3, [2, 2, 2, 5, 4], ['*', '*', '*', 0, 0]] },
+        // input len is 7
+        { args: [[2, 2, 2, 5, 9, 11, 12], [1, 2, 3, 0, 0, 0, 0]], expected: [3, [2, 2, 2, 12, 11], ['*', '*', '*', 0, 0]] },
+        { args: [[2, 2, 2, 3, 4, 5, 7], [1, 2, 3, 0, 0, 0, 0]], expected: [3, [2, 2, 2, 7, 5], ['*', '*', '*', 0, 0]] },
+    ];
+    test_level_3.forEach(function(test) {
+        let desc = `test level 3, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
+        it(desc, () => {
+            let input = createPokers(test.args[0], test.args[1]);
+            let output = createPokers(test.expected[1], test.expected[2], false);
+            let res = computeLevel(input);
+            //console.log(res);
+            expect(res.level === test.expected[0]).to.be.true;
+            expect(pokersDeepEql(res.pokers, output)).to.be.true;
+        });
+    });
+
+    const test_level_2 = [
+        /* Two Pair */
+        // input len is 5
+        { args: [[2, 2, 3, 3, 9], [1, 2, 1, 2, 0]], expected: [2, [3, 3, 2, 2, 9], ['*', '*', '*', '*', 0]] },
+        // input len is 6
+        { args: [[2, 2, 3, 3, 7, 9], [1, 2, 1, 2, 0, 0]], expected: [2, [3, 3, 2, 2, 9], ['*', '*', '*', '*', 0]] },
+        { args: [[2, 2, 3, 3, 4, 4], [1, 2, 1, 2, 1, 2]], expected: [2, [4, 4, 3, 3, 2], ['*', '*', '*', '*', '*']] },
+        // input len is 7
+        { args: [[2, 2, 3, 3, 4, 5, 9], [1, 2, 1, 2, 0, 0, 0]], expected: [2, [3, 3, 2, 2, 9], ['*', '*', '*', '*', 0]] },
+        { args: [[2, 2, 3, 3, 4, 4, 7], [1, 2, 1, 2, 1, 2, 0]], expected: [2, [4, 4, 3, 3, 7], ['*', '*', '*', '*', 0]] },
+    ];
+    test_level_2.forEach(function(test) {
+        let desc = `test level 2, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
+        it(desc, () => {
+            let input = createPokers(test.args[0], test.args[1]);
+            let output = createPokers(test.expected[1], test.expected[2], false);
+            let res = computeLevel(input);
+            //console.log(res);
+            expect(res.level === test.expected[0]).to.be.true;
+            expect(pokersDeepEql(res.pokers, output)).to.be.true;
+        });
+    });
+
+    const test_level_1 = [
+        /* One Pair */
+        // input len is 5
+        { args: [[2, 2, 3, 4, 9], [1, 2, 0, 0, 0]], expected: [1, [2, 2, 9, 4, 3], ['*', '*', 0, 0, 0]] },
+        // input len is 6
+        { args: [[8, 8, 3, 4, 5, 12], [1, 2, 0, 0, 0, 0]], expected: [1, [8, 8, 12, 5, 4], ['*', '*', 0, 0, 0]] },
+        // input len is 7
+        { args: [[0, 0, 3, 4, 5, 11, 12], [1, 2, 0, 0, 0, 0, 3]], expected: [1, [0, 0, 12, 11, 5], ['*', '*', 3, 0, 0]] },
+    ];
+    test_level_1.forEach(function(test) {
+        let desc = `test level 1, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
+        it(desc, () => {
+            let input = createPokers(test.args[0], test.args[1]);
+            let output = createPokers(test.expected[1], test.expected[2], false);
+            let res = computeLevel(input);
+            //console.log(res);
+            expect(res.level === test.expected[0]).to.be.true;
+            expect(pokersDeepEql(res.pokers, output)).to.be.true;
+        });
+    });
+
+    const test_level_0 = [
+        /* Hight Card */
+        // input len is 5
+        { args: [[2, 3, 4, 9, 11], [1, 2, 0, 0, 0]], expected: [0, [11, 9, 4, 3, 2], [0, 0, 0, 2, 1]] },
+        // input len is 6
+        { args: [[0, 3, 4, 5, 11, 12], [1, 2, 0, 0, 0, 0]], expected: [0, [12, 11, 5, 4, 3], [0, 0, 0, 0, 2]] },
+        // input len is 7
+        { args: [[0, 1, 3, 4, 5, 11, 12], [1, 2, 0, 0, 0, 0, 3]], expected: [0, [12, 11, 5, 4, 3], [3, 0, 0, 0, 0]] },
+    ];
+    test_level_1.forEach(function(test) {
+        let desc = `test level 1, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
+        it(desc, () => {
+            let input = createPokers(test.args[0], test.args[1]);
+            let output = createPokers(test.expected[1], test.expected[2], false);
+            let res = computeLevel(input);
+            //console.log(res);
+            expect(res.level === test.expected[0]).to.be.true;
+            expect(pokersDeepEql(res.pokers, output)).to.be.true;
         });
     });
 });
