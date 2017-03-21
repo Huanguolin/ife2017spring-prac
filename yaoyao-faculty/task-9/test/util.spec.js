@@ -1,10 +1,10 @@
 import chai from 'chai';
-import util from '../lib/util';
+import util from '../holdem/util';
 
 const expect = chai.expect;
 const getStraight = util.getStraight;
 
-describe.only('lib/util#getStraight ', () => {
+describe('holdem/util#getStraight ', () => {
     
     // generate pokers and ignore type
     const generatePokers = function (valList, messIt = true) {
