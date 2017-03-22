@@ -289,4 +289,18 @@ describe('holdem/holdem#compare', () => {
         expect(compare(level_0, level_7) < 0).to.be.true;
     }); 
 
+
+    it('same level (level 8)', () => {
+        let level_8_1 = computeLevel(generatePokers([0, 1, 2, 3, 4], [0, 0, 0, 0, 0]));
+        let level_8_2 = computeLevel(generatePokers([3, 4, 5, 6, 7], [0, 0, 0, 0, 0]));
+        let level_8_3 = computeLevel(generatePokers([12, 0, 1, 2, 3], [0, 0, 0, 0, 0]));
+        
+        let res_1 = compare(level_8_1, level_8_2);
+        let res_2 = compare(level_8_3, level_8_1);
+        let res_3 = compare(level_8_3, level_8_3);
+        //console.log(res_1, res_2);
+        expect(res_1 < 0).to.be.true;
+        expect(res_2 < 0).to.be.true;
+        expect(res_3 === 0).to.be.true;
+    });
 });

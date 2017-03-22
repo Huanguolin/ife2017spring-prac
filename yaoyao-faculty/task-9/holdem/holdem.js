@@ -151,7 +151,7 @@ class Holdem {
 
         if (res === 0) {
             for (let i = 0; i < ONE_HAND_POKERS_LEN; i++) {
-                res = a.pokers[i].v - a.pokers[i].v;
+                res = a.pokers[i].v - b.pokers[i].v;
                 if (res) break;
             }
         }
