@@ -1,7 +1,7 @@
 import chai from 'chai';
 import Holdem from '../holdem/holdem';
 
-let expect = chai.expect;
+const expect = chai.expect;
 const computeLevel = Holdem.computeLevel;
 const compare = Holdem.compare;
 
@@ -278,29 +278,101 @@ describe('holdem/holdem#computeLevel', () => {
 describe('holdem/holdem#compare', () => {
 
     it('level is different', () => {
-        let level_8 = computeLevel(generatePokers([2, 3, 4, 5, 6], [0, 0, 0, 0, 0]));
-        let level_7 = computeLevel(generatePokers([4, 4, 4, 4, 6], [0, 1, 2, 3, 0]));
-        let level_4 = computeLevel(generatePokers([2, 3, 4, 5, 6], [0, 0, 0, 0, 3]));
-        let level_0 = computeLevel(generatePokers([4, 7, 8, 10, 12], [0, 1, 2, 3, 0]));
+        let level_8 = {
+            level: 8,
+            pokers: generatePokers([6, 5, 4, 3, 2], [0, 0, 0, 0, 0], false)
+        };
+        let level_4 = {
+            level: 4,
+            pokers: generatePokers([6, 5, 4, 3, 2], [0, 0, 0, 0, 3], false)
+        };
+        let level_0 = {
+            level: 0,
+            pokers: generatePokers([6, 5, 4, 3, 0], [2, 0, 1, 0, 3], false)
+        };
 
-        expect(compare(level_8, level_7) > 0).to.be.true;
+        expect(compare(level_8, level_4) > 0).to.be.true;
         expect(compare(level_4, level_0) > 0).to.be.true;
         expect(compare(level_4, level_8) < 0).to.be.true;
-        expect(compare(level_0, level_7) < 0).to.be.true;
+        expect(compare(level_0, level_4) < 0).to.be.true;
     }); 
 
 
-    it('same level (level 8)', () => {
-        let level_8_1 = computeLevel(generatePokers([0, 1, 2, 3, 4], [0, 0, 0, 0, 0]));
-        let level_8_2 = computeLevel(generatePokers([3, 4, 5, 6, 7], [0, 0, 0, 0, 0]));
-        let level_8_3 = computeLevel(generatePokers([12, 0, 1, 2, 3], [0, 0, 0, 0, 0]));
-        
+    it('same level (level 8)', () => { 
+        let level_8_1 = {
+            level: 8,
+            pokers: generatePokers([12, 11, 10, 9, 8], [1, 1, 1, 1, 1], false)
+        };
+        let level_8_2 = {
+            level: 8,
+            pokers: generatePokers([4, 3, 2, 1, 0], [0, 0, 0, 0, 0], false)
+        };
+        let level_8_3 = {
+            level: 8,
+            pokers: generatePokers([3, 2, 1, 0, 12], [3, 3, 3, 3, 3], false)
+        };
+
         let res_1 = compare(level_8_1, level_8_2);
-        let res_2 = compare(level_8_3, level_8_1);
-        let res_3 = compare(level_8_3, level_8_3);
-        //console.log(res_1, res_2);
-        expect(res_1 < 0).to.be.true;
+        let res_2 = compare(level_8_1, level_8_3);
+        let res_3 = compare(level_8_3, level_8_1);
+        let res_4 = compare(level_8_3, level_8_3);
+        expect(res_1 > 0).to.be.true;
+        expect(res_2 > 0).to.be.true;
+        expect(res_3 < 0).to.be.true;
+        expect(res_4 === 0).to.be.true;
+    });    
+    
+    it('same level (level 6)', () => { 
+        let level_6_1 = {
+            level: 6,
+            pokers: generatePokers([1, 1, 1, 9, 9], [1, 2, 3, 1, 0], false)
+        };
+        let level_6_2 = {
+            level: 6,
+            pokers: generatePokers([0, 0, 0, 12, 12], [1, 2, 3, 1, 0], false)
+        };
+        let level_6_3 = {
+            level: 6,
+            pokers: generatePokers([1, 1, 1, 11, 11], [1, 2, 3, 1, 0], false)
+        };
+
+        let res_1 = compare(level_6_1, level_6_2);
+        let res_2 = compare(level_6_1, level_6_3);
+        let res_3 = compare(level_6_2, level_6_2);
+        expect(res_1 > 0).to.be.true;
         expect(res_2 < 0).to.be.true;
         expect(res_3 === 0).to.be.true;
+    });
+
+    it('same level (level 3)', () => { 
+        let level_3_1 = {
+            level: 3,
+            pokers: generatePokers([1, 1, 1, 9, 3], [1, 2, 3, 1, 0], false)
+        };
+        let level_3_2 = {
+            level: 3,
+            pokers: generatePokers([1, 1, 1, 9, 8], [1, 2, 3, 1, 0], false)
+        };
+
+        let res_1 = compare(level_3_1, level_3_2);
+        let res_2 = compare(level_3_2, level_3_2);
+        expect(res_1 < 0).to.be.true;
+        expect(res_2 === 0).to.be.true;
+    });
+
+    it('same level (level 0)', () => { 
+        let level_0_1 = {
+            level: 0,
+            pokers: generatePokers([12, 9, 8, 7, 1], [1, 2, 3, 1, 0], false)
+        };
+        let level_0_2 = {
+            level: 0,
+            pokers: generatePokers([12, 9, 8, 7, 0], [1, 2, 3, 1, 0], false)
+        };
+
+        let res_1 = compare(level_0_1, level_0_2);
+        let res_2 = compare(level_0_2, level_0_2);
+        expect(res_1 > 0).to.be.true;
+        expect(res_2 === 0).to.be.true;
     });
 });

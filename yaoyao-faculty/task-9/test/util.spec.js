@@ -3,47 +3,46 @@ import util from '../holdem/util';
 
 const expect = chai.expect;
 const getStraight = util.getStraight;
+// generate pokers and ignore type
+const generatePokers = function (valList, messIt = true) {
+    let ret = valList.map( v => { 
+        const t =  Math.floor(Math.random() * 3);
+        return { v, t }; 
+    });
+    if (messIt) {
+        const tmp = ret;
+        ret = [];
+        do {
+            let i = Math.random() * (tmp.length - 1);
+            i = Math.floor(i);
+            ret.push(tmp[i]);
+            tmp.splice(i, 1);
+        } while (tmp.length);
+    }
+    return ret;
+};
+// only check pokers value is equal or not
+const pokersValueEql = function (a, b) {
+    let res = true;
+
+    if (a.length === b.length) {
+        const len = a.length;            
+        for (let i = 0; i < len; i++) {
+            if (res) {
+                res = a[i].v === b[i].v; 
+            } else {
+                break;
+            }
+        }
+    } else {
+        res = false;
+    }
+
+    return res;
+};
 
 describe('holdem/util#getStraight ', () => {
-    
-    // generate pokers and ignore type
-    const generatePokers = function (valList, messIt = true) {
-        let ret = valList.map( v => { 
-            const t =  Math.floor(Math.random() * 3);
-            return { v, t }; 
-        });
-        if (messIt) {
-            const tmp = ret;
-            ret = [];
-            do {
-                let i = Math.random() * (tmp.length - 1);
-                i = Math.floor(i);
-                ret.push(tmp[i]);
-                tmp.splice(i, 1);
-            } while (tmp.length);
-        }
-        return ret;
-    };
-    // only check pokers value is equal or not
-    const pokersValueEql = function (a, b) {
-        let res = true;
-
-        if (a.length === b.length) {
-            const len = a.length;            
-            for (let i = 0; i < len; i++) {
-                if (res) {
-                    res = a[i].v === b[i].v; 
-                } else {
-                    break;
-                }
-            }
-        } else {
-            res = false;
-        }
-
-        return res;
-    };
-
+ 
     it('input cannot be null or undefined', () => {         
         let err;
         try { 
