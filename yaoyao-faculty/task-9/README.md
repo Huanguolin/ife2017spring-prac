@@ -10,6 +10,9 @@ npm run dev
 
 # build for production with minification
 npm run build
+
+# run test
+npm test
 ```
 主要使用 `Webpack2.x + Vue2.x + scss`
 
@@ -22,8 +25,7 @@ npm run build
 
 ### 应用简介 
 任务中的“在线德州扑克”类似于“微扑克”或“德扑圈”，是朋友间组织牌局的工具应用。
-这一部分，我们通过使用JavaScript编写基础算法的方式，了解德州扑克的基本规则。规则介绍
-
+这一部分，我们通过使用JavaScript编写基础算法的方式，了解德州扑克的基本规则。规则介绍参考（[百度百科](http://baike.baidu.com/link?url=jKADh0XgSlQXR1l9WRPDNauZ1sBBSCcYdzhy-xDuJIbvimpNh6St0l3d34HZWLa1w_toImFXjZXycJzkyeSfHFXcuuDEKDHmjmY3GtyO33BAiT8wuk5Wwoc1pRp9DZ6LZiNLcjNPmwn5Io1xjP_iMU21Nni8CSUEhrrzfvmXLcgsFWdpHSs-gTeK_qhPeonWjJBrIB7uzSCUDQWFTgY02zK_q7CkEUv6QwCKELM1pfK) or [维基百科](https://zh.wikipedia.org/wiki/%E5%BE%B7%E5%B7%9E%E6%92%B2%E5%85%8B)）
 ### 任务内容（一）
 使用JavaScript实现和封装 牌型判定 和 牌面大小比较
 
