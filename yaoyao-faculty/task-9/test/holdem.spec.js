@@ -262,8 +262,8 @@ describe('holdem/holdem#computeLevel', () => {
         // input len is 7
         { args: [[0, 1, 3, 4, 5, 11, 12], [1, 2, 0, 0, 0, 0, 3]], expected: [0, [12, 11, 5, 4, 3], [3, 0, 0, 0, 0]] },
     ];
-    test_level_1.forEach((test) => {
-        let desc = `test level 1, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
+    test_level_0.forEach((test) => {
+        let desc = `test level 0, input ${JSON.stringify(test.args)}, expected ${JSON.stringify(test.expected)}`; 
         it(desc, () => {
             let input = generatePokers(test.args[0], test.args[1]);
             let output = generatePokers(test.expected[1], test.expected[2], false);
