@@ -36,7 +36,7 @@
             <section class="operation">
                 <button class="send-card" 
                     @click="sendCard"
-                    :disabled="counter > 13">
+                    :disabled="counter >= 13">
                     Send Card
                 </button>
                 <button class="compare" 
