@@ -34,9 +34,21 @@
                 </ol>
             </section>
             <section class="operation">
-                <button class="send-card" @click="sendCard">Send Card</button>
-                <button class="compare" @click="compare">Compare</button>
-                <button class="reset" @click="reset">Reset</button>
+                <button class="send-card" 
+                    @click="sendCard"
+                    :disabled="counter > 13">
+                    Send Card
+                </button>
+                <button class="compare" 
+                    @click="compare"
+                    :disabled="counter < 11">
+                    Compare
+                </button>
+                <button class="reset" 
+                    @click="reset"
+                    :disabled="counter < 1">
+                    Reset
+                </button>
             </section>
         </main>
     </div>
@@ -45,13 +57,13 @@
 <style lang="scss" scoped>
 .app {
     header {
-        margin: 100px 0 0;
+        margin: 70px 0 0;
         text-align: center;
     }
     main {
         width: 1030px;
         height: 500px;
-        margin: 50px auto;
+        margin: 40px auto;
 
         .left,
         .right {
@@ -102,6 +114,12 @@
                 outline: none;
                 cursor: pointer;
                 
+                &:hover,
+                &:active { background: #2f79ba; }
+                &:disabled {
+                    background: #bbb;
+                    cursor: not-allowed;
+                }
                 &:nth-child(2n) { margin: 0 20px; }
             }
         }
@@ -184,6 +202,7 @@ export default {
                     pokers: []
                 };
             });
+            this.compareList = [];
             this.holdemPoker =  new Poker();
         }
     }
