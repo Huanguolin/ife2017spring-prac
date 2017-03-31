@@ -4,80 +4,97 @@
 const DIRECTIONS = ['N', 'E', 'S', 'W'];
 const ANGLE = ['0deg', '90deg', '180deg', '-90deg'];
 
-/**
- * BoxPlayGround constructor.
- * 
- * @param {Element} mountPoint BoxPlayGround mount point 
- * @param {Number} xMax x-axis maximum (optional, defualt is 10)
- * @param {Number} yMax y-axis maximum (optional, default is 10)
- */
-function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
-    if (!mountPoint || !(mountPoint instanceof Element)) throw new Error('"mountPoint" is invalid!');
+const _ = new WeakMap();
 
-    const _data = {
-        _xMax: _validateIntergerValue(false, xMax, 1),
-        _yMax: _validateIntergerValue(false, yMax, 1),             
-        _mountPoint: mountPoint,
-        _box: null, // inner use only
-        _isRendered: false, 
-        _x: 0,
-        _y: 0,
-        _direction: 'N'
-    };
+class BoxPlayGround {
 
-    Object.defineProperties(this, {
-        xMax: { get () { return _data._xMax; } },
-        yMax: { get () { return _data._yMax; } },
-        mountPoint: { get () { return _data._mountPoint; } },
-        isRendered: { get () { return _data._isRendered; } },
-        x: {
-            set (val) { 
-                _data._x = _validateIntergerValue(true, val, 0, _data._xMax - 1);
+    /**
+     * BoxPlayGround constructor.
+     * 
+     * @param {Element} mountPoint BoxPlayGround mount point 
+     * @param {Number} xMax x-axis maximum (optional, defualt is 10)
+     * @param {Number} yMax y-axis maximum (optional, default is 10)
+     */
+    constructor (mountPoint, xMax = 10, yMax = 10) {
+        if (!mountPoint || !(mountPoint instanceof Element)) throw new Error('"mountPoint" is invalid!');
 
-                // update UI
-                if (this.isRendered) {
-                    updateX(); 
-                }
+        // private data
+        const data = {
+            xMax: _validateIntergerValue(false, xMax, 1),
+            yMax: _validateIntergerValue(false, yMax, 1),             
+            mountPoint: mountPoint,
+            box: null, // inner use only
+            isRendered: false, 
+            x: 0,
+            y: 0,
+            direction: 'N'
+        };
+
+        // private method
+        const updateX = () => data.box.style.left = (this.x * 50) + 'px';
+        const updateY = () => data.box.style.top = (this.y * 50) + 'px';
+        const updateDirection = () => {
+            const index = DIRECTIONS.indexOf(this.direction);
+            data.box.style.transform = `rotate(${ANGLE[index]})`
+        };
+        const updateAll = () => {        
+                updateX();
+                updateY();
+                updateDirection();
+        };
+
+        // define public properties
+        Object.defineProperties(this, {
+            xMax: { get () { return data.xMax; } },
+            yMax: { get () { return data.yMax; } },
+            mountPoint: { get () { return data.mountPoint; } },
+            isRendered: { get () { return data.isRendered; } },
+            x: {
+                set (val) { 
+                    data.x = _validateIntergerValue(true, val, 0, data.xMax - 1);
+
+                    // update UI
+                    if (this.isRendered) {
+                        updateX(); 
+                    }
+                },
+                get () { return data.x; }
             },
-            get () { return _data._x; }
-        },
-        y: {
-            set (val) { 
-                _data._y = _validateIntergerValue(true, val, 0, _data._yMax - 1); 
+            y: {
+                set (val) { 
+                    data.y = _validateIntergerValue(true, val, 0, data.yMax - 1); 
 
-                // update UI
-                if (this.isRendered)  {
-                    updateY();
-                }
+                    // update UI
+                    if (this.isRendered)  {
+                        updateY();
+                    }
+                },
+                get () { return data.y; }
             },
-            get () { return _data._y; }
-        },
-        direction: {
-            set (val) { 
-                _data._direction = _validateDirection(val); 
+            direction: {
+                set (val) { 
+                    data.direction = _validateDirection(val); 
 
-                // update UI
-                if (this.isRendered) {
-                    updateDirection();
-                };
-            },
-            get () { return _data._direction; }
-        }
-    });
+                    // update UI
+                    if (this.isRendered) {
+                        updateDirection();
+                    };
+                },
+                get () { return data.direction; }
+            }
+        });
 
-    const updateX = () => _data._box.style.left = (this.x * 50) + 'px';
-    const updateY = () => _data._box.style.top = (this.y * 50) + 'px';
-    const updateDirection = () => {
-        const index = DIRECTIONS.indexOf(this.direction);
-        _data._box.style.transform = `rotate(${ANGLE[index]})`
-    };
-    const updateAll = () => {        
-            updateX();
-            updateY();
-            updateDirection();
-    };
+        // set private to WeakMap
+        _.set(this, {
+            data,
+            updateX,
+            updateY,
+            updateDirection,
+            updateAll
+        });
+    }
 
-    BoxPlayGround.prototype.render = () => {
+    render () {
         // check flag
         if (this.isRendered) return;
 
@@ -98,28 +115,30 @@ function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
         rootDiv.appendChild(xAxisUl);
         rootDiv.appendChild(yAxisUl);
         rootDiv.appendChild(playGroundDiv);
+
         // remeber box elment 
-        _data._box = boxDiv;
+        _.get(this).data.box = boxDiv;
         // update all
-        updateAll();
+        _.get(this).updateAll();
+
         // append it to mount point 
         this.mountPoint.innerHTML = '';
         this.mountPoint.appendChild(rootDiv);
 
         // set flag
-        _data._isRendered = true;
-    };
+        _.get(this).data.isRendered = true;
+    }
 
-    BoxPlayGround.prototype.go = () => {
+    go () {
         switch (this.direction) {            
             case 'N': this.y--; break; 
             case 'E': this.x++; break; 
             case 'S': this.y++; break; 
             case 'W': this.x--; break;
         }
-    };
-    
-    BoxPlayGround.prototype.turnTo = direct => {        
+    }
+
+    turnTo (direct) {
         const lastIndex = DIRECTIONS.indexOf(this.direction);
         const len = DIRECTIONS.length;
         let ov;
@@ -138,10 +157,11 @@ function BoxPlayGround (mountPoint, xMax = 10, yMax = 10) {
         // set direction
         this.direction = DIRECTIONS[newIndex];
     }  
+
 }
 
 
-
+// ====== common functions =======
 function _validateIntergerValue (isSilent, val, min, max) {
     let n = Number(val);    
     if (!Number.isInteger(n)) {
